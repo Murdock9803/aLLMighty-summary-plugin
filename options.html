@@ -1,0 +1,30 @@
+<!-- Options page UI: API Input + Save button-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aLLMighty Summary Plugin</title>
+
+    <style>
+        .success-msg {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>aLLMighty Summary Settings</h1>
+
+    <div class="form-group">
+        <label for="api-key">Gemini API Key</label>
+        <input type="text" id="api-key" placeholder="Enter you Google Gemini API Key">
+
+        <p>To know how to get an API key, <a target="_blank" href="https://ai.google.dev/gemini-api/docs/api-key">read this</a></p>
+    </div>
+
+    <button id="save-btn">Save</button>
+    <p id="success-msg" class="success-msg">Saved successfully!</p>
+
+    <script src="options.js"></script>
+</body>
+</html>
