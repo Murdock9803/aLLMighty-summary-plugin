@@ -1,68 +1,83 @@
 // loading animation + Result output request + error handling
 document.getElementById("summarize").addEventListener("click", () => {
-    const result = document.getElementById("result");
-    result.innerHTML = "<div class='loader'></div>";
+  const result = document.getElementById("result");
+  result.innerHTML = "<div class='loader'></div>";
 
-    const format = document.getElementById("summary-format");
+  // get the select value (was passing the element before)
+  const format = document.getElementById("summary-format")?.value || "brief";
 
-    // Getting the user's API Key
-    chrome.storage.sync.get(["GEMINI_API_KEY"], ({ GEMINI_API_KEY }) => {
-        if (!GEMINI_API_KEY) {
-            result.textContent = "No API Key found. Press the ⚙️ icon for setting one.";
-            return;
+  // Getting the user's API Key
+  chrome.storage.sync.get(["GEMINI_API_KEY"], ({ GEMINI_API_KEY }) => {
+    if (!GEMINI_API_KEY) {
+      result.textContent = "No API Key found. Press the ⚙️ icon for setting one.";
+      return;
+    }
+
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tab = tabs && tabs[0];
+      if (!tab || !tab.id) {
+        result.textContent = "No active tab found.";
+        return;
+      }
+
+      // send message to content script
+      chrome.tabs.sendMessage(tab.id, { type: "GET_ARTICLE_TEXT" }, async (response) => {
+        // if there's a runtime error (no receiving end), show helpful message
+        if (chrome.runtime.lastError) {
+          result.textContent = "Couldn't extract text from the page: " + chrome.runtime.lastError.message;
+          return;
         }
 
-        chrome.tabs.query({active: true, currentWindow: true}, ([tab]) => {
-            chrome.tabs.sendMessage(tab.id, { type: "GET_ARTICLE_TEXT" }, async ({ text }) => {
+        const text = response?.text;
+        if (!text) {
+          result.textContent = "Couldn't extract text from the page.";
+          return;
+        }
 
-                if (!text) {
-                    result.textContent = "Couldn't extract text from the page.";
-                    return;
-                }
-
-                try {
-                    const summary = await getSummary (text, format, GEMINI_API_KEY);
-                    result.textContent = summary;
-                } catch (error) {
-                    result.textContent = "There is an error: " + error.message;
-                }
-            });
-        });
+        try {
+          const summary = await getSummary(text, format, GEMINI_API_KEY);
+          result.textContent = summary;
+        } catch (error) {
+          result.textContent = "There is an error: " + (error?.message || error);
+        }
+      });
     });
+  });
 });
 
 
 // Processing the AI input, and fetching results output
 async function getSummary(rawText, format, API_KEY) {
-    const max = 20000;
-    const text = rawText.length > max ? rawText.slice(0, max) + "..." : rawText;
+  const max = 20000;
+  const text = rawText.length > max ? rawText.slice(0, max) + "..." : rawText;
 
-    const promptByFormat = {
-        brief: `Summarise the given article briefly, in 2-4 sentences:\n\n${text}`,
-        detailed: `Summarise the given article in detail, 6-10 sentences, covering the key points and details:\n\n${text}`,
-        bullets: `summarise the given article in 5-7 bullet points. Start each line by "- " so that it looks like a bullt point in markdown:\n\n${text}`
-    }
+  const promptByFormat = {
+    brief: `Summarise the given article briefly, in 2-4 sentences:\n\n${text}`,
+    detailed: `Summarise the given article in detail, 6-10 sentences, covering the key points and details:\n\n${text}`,
+    bullets: `summarise the given article in 5-7 bullet points. Start each line by "- " so that it looks like a bullet point in markdown:\n\n${text}`
+  };
 
-    const prompt = promptByFormat[format] || promptByFormat.brief;
+  const prompt = promptByFormat[format] || promptByFormat.brief;
 
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
-    {
-        method: "POST",
-        headers: { "Content-Type" : "application/json"},
-        body: JSON.stringify({
-            contents: [{parts: [{ text: prompt }]}],
-            generationConfig: {temperature: 0.2},
-        })
-    }
-    );
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.2 },
+    })
+  });
 
-    if (!res.ok) {
-        const { error } = await res.json();
-        throw new Error(error?.message || "Request failed");
-    }
+  if (!res.ok) {
+    // try to extract server error message
+    let body;
+    try { body = await res.json(); } catch(e) { /* ignore */ }
+    const message = body?.error?.message || `Request failed with status ${res.status}`;
+    throw new Error(message);
+  }
 
-    const data = await res.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text ?? "No summary found.";
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text ?? "No summary found.";
 }
 
 

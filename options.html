@@ -5,25 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>aLLMighty Summary Plugin</title>
-
-    <style>
-        .success-msg {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="images/icon.png" type="image/x-icon">
 </head>
-<body>
-    <h1>aLLMighty Summary Settings</h1>
+<body class="options-page">
+    <div class="box">
+        <h1>&lt;a<span>LLM</span>ighty&gt;</h1>
+        <h2>Summary Plugin</h2>
 
-    <div class="form-group">
-        <label for="api-key">Gemini API Key</label>
-        <input type="text" id="api-key" placeholder="Enter you Google Gemini API Key">
+        <div class="form-group">
+            <label for="api-key">&gt; Gemini API Key</label>
+            <input type="text" id="api-key" placeholder="Enter you Google Gemini API Key">
 
-        <p>To know how to get an API key, <a target="_blank" href="https://ai.google.dev/gemini-api/docs/api-key">read this</a></p>
+            <p>&gt; To know how to get an API key, <a target="_blank" href="https://ai.google.dev/gemini-api/docs/api-key">read this</a></p>
+        </div>
+
+        <button id="save-btn" class="save-btn">Save</button>
+        <p id="success-msg" class="success-msg">Saved successfully!</p>
     </div>
-
-    <button id="save-btn">Save</button>
-    <p id="success-msg" class="success-msg">Saved successfully!</p>
 
     <script src="options.js"></script>
 </body>

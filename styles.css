@@ -1,0 +1,184 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+/* Popup UI */
+.popup-page {
+    padding: 10px;
+    width: 350px;
+    background-color: #ffffff;
+}
+
+.popup-page h1 {
+    font-size: 25px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.popup-page h2 {
+    font-size: 21px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.popup-page h1 span {
+    color: #26a8ff;
+}
+
+.options-page {
+    width: 100%;
+}
+
+.summary-format {
+    width: 45%;
+    height: 25px;
+    border-radius: 4px;
+}
+
+.summarize {
+    width: 30%;
+    border: none;
+    background-color: #26a8ff;
+    height: 25px;
+    border-radius: 4px;
+    color: #ffffff;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all ease 0.3s;
+}
+.summarize:hover {
+    background-color: #124a6e;
+    color: white;
+}
+
+.copy-btn {
+    width: 22%;
+    border: 2px solid #126ba5;
+    border-style: dashed;
+    background-color: #ffffff;
+    height: 25px;
+    border-radius: 4px;
+    color: #124a6e;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.result {
+    width: 100%;
+    min-height: 30px;
+    padding: 10px;
+    border: 2px dashed grey;
+    border-radius: 20px;
+    margin-top: 20px;
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+    /* Loading Animation */
+.popup-page .loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* --------------------------------------------------------- */
+
+/* Options UI */
+.options-page {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to bottom right, rgb(30, 49, 81), rgb(75, 12, 12));
+    background-position: center;
+    background-size: cover;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.box {
+    -webkit-backdrop-filter: blur(4px);
+	backdrop-filter: blur(4px);
+    height: 400px;
+    width: 350px;
+	color: #c3cee9;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.689);
+}
+
+.options-page h1 {
+    font-size: 25px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.options-page h2 {
+    font-size: 21px;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.options-page h1 span {
+    color: #26a8ff;
+}
+
+.form-group label {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+.form-group input {
+    width: 100%;
+    height: 35px;
+    padding: 5px;
+    background-color: #ccd3e6;
+    border: none;
+    font-family: monospace;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+.form-group p {
+    font-size: 15px;
+}
+.form-group a {
+    color: #b8cbff;
+    font-family: 'Times New Roman', Times, serif;
+    letter-spacing: 1px;
+}
+
+.save-btn {
+    width: 100%;
+    background-color: #63a7d5;
+    border: none;
+    height: 30px;
+    border-radius: 10px;
+    font-size: 15px;
+    color: rgb(31, 6, 6);
+    cursor: pointer;
+    margin-top: 70px;
+}
+
+.options-page .success-msg {
+    display: none;
+    color: #c3cee9;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 15px;
+}
